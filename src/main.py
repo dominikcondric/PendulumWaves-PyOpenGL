@@ -1,4 +1,3 @@
-import glfw
 from pendulum import Pendulum
 from window import Window
 import glm
@@ -57,11 +56,9 @@ def main():
             cam.aspect_ratio = float(win_width) / win_height
             glViewport(0, 0, win_width, win_height)
 
-        if (window.delta_time < 1. / 60):
+        if window.delta_time < 1. / 60:
             time.sleep(1. / 60 - window.delta_time)
             window.update_time()     
-
-    del shader
 
 # start of the program
 if __name__ == "__main__":

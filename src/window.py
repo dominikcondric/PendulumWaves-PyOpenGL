@@ -47,5 +47,4 @@ class Window:
 
     def _on_window_resize(self, window, w, h) -> None:
         self.resized = True
-        print("Resized")
 

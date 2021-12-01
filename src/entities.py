@@ -27,7 +27,7 @@ class Entity:
     def render(self) -> None:
         glBindVertexArray(self._vao)
         if self._index_count == 0:
-            glDrawArrays(self._drawing_mode, 0, self.vertex_count)
+            glDrawArrays(self._drawing_mode, 0, self._vertex_count)
         else:
             glDrawElements(self._drawing_mode, self._index_count, GL_UNSIGNED_INT, None)
         glBindVertexArray(GL_NONE)
@@ -35,7 +35,7 @@ class Entity:
     def renderInstances(self, instanceCount):
         glBindVertexArray(self._vao)
         if self._index_count == 0:
-            glDrawArraysInstanced(self._drawing_mode, 0, self.vertex_count, instanceCount)
+            glDrawArraysInstanced(self._drawing_mode, 0, self._vertex_count, instanceCount)
         else:
             glDrawElementsInstanced(self._drawing_mode, self._index_count, GL_UNSIGNED_INT, None, instanceCount)
         glBindVertexArray(GL_NONE)
@@ -218,6 +218,29 @@ class Sphere(Entity):
         glBindBuffer(GL_ARRAY_BUFFER, GL_NONE)
         glBindVertexArray(GL_NONE)
         
+class Line(Entity):
+    def __init__(self):
+        super().__init__()
+        self.construct_model()
+        self._vertex_count = 2
+        self._index_count = 0
+        self._drawing_mode = GL_LINES
+        self.starting_coordinate = glm.vec3(-0.5, 0., 0.)
+        self.ending_coordinate = glm.vec3(0.5, 0., 0.)
+        self.lightened = False
+
+    def construct_model(self):
+        data = np.array([-0.5, 0., 0., 0.5, 0., 0.], np.float32)
+
+        self._vbo = glGenBuffers(1)
+        self._vao = glGenVertexArrays(1)
+        glBindVertexArray(self._vao)
+        glBindBuffer(GL_ARRAY_BUFFER, self._vbo)
+        glBufferData(GL_ARRAY_BUFFER, data, GL_STATIC_DRAW)
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, ctypes.c_void_p(0))
+        glEnableVertexAttribArray(0)
+        glBindBuffer(GL_ARRAY_BUFFER, GL_NONE)
+        glBindVertexArray(GL_NONE)
 
 
 

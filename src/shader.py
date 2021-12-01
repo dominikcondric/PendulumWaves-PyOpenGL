@@ -1,21 +1,20 @@
-import ctypes
-from logging import info
-from re import S
 from OpenGL.GL import *
 from OpenGL.GL.shaders import compileProgram, compileShader
 import glm
+import os 
 
 class Shader:
-    def __init__(self, vertexShaderName: str, fragmentShaderName: str):
+    def __init__(self, vertex_shader_name: str, fragment_shader_name: str):
         self.uniform_cache = dict()
-        self._create_shader_program(vertexShaderName, fragmentShaderName)
+        self._create_shader_program(vertex_shader_name, fragment_shader_name)
 
-    def _create_shader_program(self, vertexShaderName: str, fragmentShaderName: str):
-        with open("Shaders/" + vertexShaderName, 'r') as file:
+    def _create_shader_program(self, vertex_shader_name: str, fragment_shader_name: str):
+        directory_path = os.path.dirname(os.path.realpath(__file__))
+        with open(directory_path + "/Shaders/" + vertex_shader_name, 'r') as file:
             vertex_shader_code = file.read()
             file.close()
 
-        with open("Shaders/" + fragmentShaderName, 'r') as file:
+        with open(directory_path + "/Shaders/" + fragment_shader_name, 'r') as file:
             fragment_shader_code = file.read()
             file.close()
 
