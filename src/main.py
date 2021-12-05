@@ -1,4 +1,4 @@
-from pendulum import Pendulum
+from pendulumSystem import PendulumSystem
 from window import Window
 import glm
 from OpenGL.GL import *
@@ -20,7 +20,7 @@ def main():
     light_source.translate(glm.vec3(-2., 1., 1))
     light_source.lightened = False
 
-    pendulum = Pendulum()
+    pendulumSystem = PendulumSystem()
     clearing_color = glm.vec4(0.1, 0.1, 0.1, 1.0)
     glClearColor(clearing_color.r, clearing_color.g, clearing_color.b, clearing_color.a)
 
@@ -45,8 +45,8 @@ def main():
         light_source.render()
 
         # Pendulum rendering
-        pendulum.apply_physics()
-        pendulum.draw(shader)
+        pendulumSystem.apply_physics()
+        pendulumSystem.draw(shader)
 
         window.swap_buffers()
         window.poll_events()
