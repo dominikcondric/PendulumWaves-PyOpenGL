@@ -17,6 +17,7 @@ class Window:
 
         self.current_time = glfw.get_time()
         self.last_time = 0
+        self.last_delta_time = 0.
         self.delta_time = self.current_time - self.last_time
         self.resized = False
 
@@ -24,20 +25,21 @@ class Window:
         glfw.swap_buffers(self.window)
 
     def poll_events(self) -> None:
-        resized = False
+        self.resized = False
         glfw.poll_events()
 
 
     def update_time(self):
         self.last_time = self.current_time
         self.current_time = glfw.get_time()
+        self.last_delta_time = self.delta_time
         self.delta_time = self.current_time - self.last_time
 
     def is_key_pressed(self, glfw_key_code: int) -> bool:
-        glfw.get_key(self.window, glfw_key_code)
+        return glfw.get_key(self.window, glfw_key_code)
 
     def is_mouse_button_pressed(self, glfw_mouse_button_code: int) -> bool:
-        glfw.get_mouse_button(self.window, glfw_mouse_button_code)
+        return glfw.get_mouse_button(self.window, glfw_mouse_button_code)
 
     def should_close(self):
         return glfw.window_should_close(self.window)

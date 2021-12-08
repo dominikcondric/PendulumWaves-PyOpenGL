@@ -6,6 +6,7 @@ from shader import Shader
 from camera import PerspectiveCamera
 from entities import *
 import time 
+import glfw
 
 def main():
     window = Window(1024, 768, "Pendulum Waves")
@@ -13,7 +14,7 @@ def main():
     glEnable(GL_CULL_FACE)
     glViewport(0, 0, 1024, 768)
     shader = Shader("GeneralVertexShader.glsl", "GeneralFragmentShader.glsl")
-    cam = PerspectiveCamera(glm.vec3(0., -2., 15.))
+    cam = PerspectiveCamera(glm.vec3(20., -2., 0.))
     cam.center.y = -2.
     light_source = Sphere()
     light_source.scale(glm.vec3(0.2))
@@ -33,11 +34,11 @@ def main():
     shader.update_uniform_vec3("light.position", light_source.translation_vector)
     shader.update_uniform_vec3("light.color", glm.vec3(light_source.color))
 
+    window.update_time()
     while not window.should_close():
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         shader.update_uniform_mat4("view", cam.lookAt())
         shader.update_uniform_mat4("projection", cam.project())
-        window.update_time()
         # Light source rendering
         shader.update_uniform_vec4("material.color", light_source.color)
         shader.update_uniform_mat4("model", light_source.transform_matrix)
@@ -45,7 +46,8 @@ def main():
         light_source.render()
 
         # Pendulum rendering
-        pendulumSystem.apply_physics()
+        if np.abs(window.last_delta_time - window.delta_time) < 0.02:
+            pendulumSystem.apply_physics(window.delta_time)
         pendulumSystem.draw(shader)
 
         window.swap_buffers()
@@ -53,12 +55,15 @@ def main():
 
         if window.resized:
             win_width, win_height = window.get_window_size()
-            cam.aspect_ratio = float(win_width) / win_height
+            if win_width != 0 and win_height != 0:
+                cam.aspect_ratio = float(win_width) / win_height
             glViewport(0, 0, win_width, win_height)
+            window.update_time()
 
+        window.update_time()
         if window.delta_time < 1. / 60:
-            time.sleep(1. / 60 - window.delta_time)
-            window.update_time()     
+            time.sleep((1. / 60 - window.delta_time) / 2)
+            window.update_time()            
 
 # start of the program
 if __name__ == "__main__":
