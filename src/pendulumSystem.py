@@ -27,7 +27,7 @@ class PendulumSystem:
 
         self.construction_cubes = [Cube() for i in range(5)]
         self.construction_cubes[0].scale(glm.vec3(19., 0.5, 0.5))
-        self.construction_cubes[0].color = glm.vec4(0.2, 0.2, 0.2, 1.)
+        self.construction_cubes[0].color = glm.vec4(0.35, 0.7, 1.0, 0.3)
         self.construction_cubes[1].scale(glm.vec3(0.5, 7., 0.5))
         self.construction_cubes[1].translate(glm.vec3(9.75, -3.25, 0.))
         self.construction_cubes[2].scale(glm.vec3(0.5, 7., 0.5))
@@ -39,14 +39,15 @@ class PendulumSystem:
         
     def draw(self, shader: Shader) -> None:
         shader.use()
+        for pendulum in self.pendulums:
+            pendulum.draw(shader)
+
         shader.update_uniform_int("lightened", self.construction_cubes[0].lightened)
         shader.update_uniform_vec4("material.color", self.construction_cubes[0].color)
         for cube in self.construction_cubes:
             shader.update_uniform_mat4("model", cube.transform_matrix)
             cube.render()
 
-        for pendulum in self.pendulums:
-            pendulum.draw(shader)
 
     def apply_physics(self, delta_time: float) -> None:
         for pendulum in self.pendulums:

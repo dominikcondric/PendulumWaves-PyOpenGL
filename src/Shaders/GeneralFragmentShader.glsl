@@ -67,5 +67,5 @@ void main()
 	float alpha = material.color.a;
 
 	vec3 eyeDirection = normalize(eyePosition - inAttributes.fragPosition);
-	gl_FragColor = vec4(calculatePointLight(colorAmbient, colorDiffuse, colorSpecular, eyeDirection), 1.f);
+	gl_FragColor = vec4(calculatePointLight(colorAmbient, colorDiffuse, colorSpecular, eyeDirection), alpha);
 }

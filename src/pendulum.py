@@ -1,11 +1,20 @@
 from shader import Shader
 from entities import *
+from scipy import integrate as intg
+
+def angular_velocity(time_step: float, initial_condition: float, angular_velocity: intg.ode):
+    return angular_velocity
+
+def pendulum_equation(time_step: float, initial_condition: float, string_length: float, angle:float ):
+    return -(9.81 / (string_length)) * np.sin(angle)
 
 class Pendulum:
     def __init__(self, string_starting_position: glm.vec3, string_len: float, initial_angle: float = glm.pi() / 4.) -> None:
         self.string_length = string_len
         self.angle = initial_angle
         self.angular_velocity = 0.
+        self.integrator = intg.ode(pendulum_equation)
+        self.integrator.set_integrator("dopri5")
 
         self.string = Line()
         self.string.color = glm.vec4(1., 0., 0., 1.)
@@ -33,11 +42,20 @@ class Pendulum:
         shader.update_uniform_int("isLine", False)
 
     def apply_physics(self, delta_time: float) -> None:
-        def pendulum_equation():
-            return -(9.81 / (self.string_length)) * np.sin(self.angle)
-
+       
         # Explicit Euler integration
-        angular_acceleration = pendulum_equation()
-        self.angular_velocity += angular_acceleration * delta_time
-        self.angle += self.angular_velocity * delta_time
-        self.updateTranslationBasedOnAngle()        
+        # angular_acceleration = pendulum_equation(0, 0)
+        # self.angular_velocity += angular_acceleration * delta_time
+        # self.angle += self.angular_velocity * delta_time
+        self.integrator.f = pendulum_equation
+        self.integrator.set_f_params(self.string_length, self.angle)
+        self.integrator.set_initial_value(self.angular_velocity)
+        self.angular_velocity = self.integrator.integrate(delta_time)
+
+        self.integrator.f = angular_velocity
+        self.integrator.set_f_params(self.angular_velocity)
+        self.integrator.set_initial_value(self.angle)
+        self.angle = self.integrator.integrate(delta_time)
+        self.updateTranslationBasedOnAngle()   
+
+       

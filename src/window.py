@@ -35,6 +35,10 @@ class Window:
         self.last_delta_time = self.delta_time
         self.delta_time = self.current_time - self.last_time
 
+    def incremental_update_time(self):
+        self.current_time = glfw.get_time()
+        self.delta_time = self.current_time - self.last_time
+
     def is_key_pressed(self, glfw_key_code: int) -> bool:
         return glfw.get_key(self.window, glfw_key_code)
 

@@ -12,6 +12,8 @@ def main():
     window = Window(1024, 768, "Pendulum Waves")
     glEnable(GL_DEPTH_TEST)
     glEnable(GL_CULL_FACE)
+    glEnable(GL_BLEND)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     glViewport(0, 0, 1024, 768)
     shader = Shader("GeneralVertexShader.glsl", "GeneralFragmentShader.glsl")
     cam = PerspectiveCamera(glm.vec3(20., -2., 0.))
@@ -58,12 +60,12 @@ def main():
             if win_width != 0 and win_height != 0:
                 cam.aspect_ratio = float(win_width) / win_height
             glViewport(0, 0, win_width, win_height)
-            window.update_time()
 
         window.update_time()
         if window.delta_time < 1. / 60:
             time.sleep((1. / 60 - window.delta_time) / 2)
-            window.update_time()            
+            window.incremental_update_time()
+
 
 # start of the program
 if __name__ == "__main__":
