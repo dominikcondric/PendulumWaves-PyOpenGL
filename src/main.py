@@ -39,7 +39,7 @@ def main():
     window.update_time()
     while not window.should_close():
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        shader.update_uniform_mat4("view", cam.lookAt())
+        shader.update_uniform_mat4("view", cam.look_at())
         shader.update_uniform_mat4("projection", cam.project())
         # Light source rendering
         shader.update_uniform_vec4("material.color", light_source.color)
@@ -54,6 +54,11 @@ def main():
 
         window.swap_buffers()
         window.poll_events()
+
+        if window.is_key_pressed(glfw.KEY_LEFT):
+            cam.rotate_around(True, window.delta_time)
+        elif window.is_key_pressed(glfw.KEY_RIGHT):
+            cam.rotate_around(False, window.delta_time)
 
         if window.resized:
             win_width, win_height = window.get_window_size()

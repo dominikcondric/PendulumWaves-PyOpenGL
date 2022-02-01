@@ -28,7 +28,6 @@ class Window:
         self.resized = False
         glfw.poll_events()
 
-
     def update_time(self):
         self.last_time = self.current_time
         self.current_time = glfw.get_time()
