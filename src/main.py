@@ -37,6 +37,9 @@ def main():
     shader.update_uniform_vec3("light.color", glm.vec3(light_source.color))
 
     window.update_time()
+    space_pressed = False
+    physics_active = False
+    simulation_time = 0.
     while not window.should_close():
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         shader.update_uniform_mat4("view", cam.look_at())
@@ -47,11 +50,18 @@ def main():
         shader.update_uniform_int("lightened", light_source.lightened)
         light_source.render()
 
+        if not space_pressed and window.is_key_pressed(glfw.KEY_SPACE):
+            physics_active = not physics_active
+
         # Pendulum rendering
-        if np.abs(window.last_delta_time - window.delta_time) < 0.02:
+        if np.abs(window.last_delta_time - window.delta_time) < 0.02 and physics_active:
             pendulumSystem.apply_physics(window.delta_time)
+            simulation_time += window.delta_time
+            print(simulation_time)
+            
         pendulumSystem.draw(shader)
 
+        space_pressed = window.is_key_pressed(glfw.KEY_SPACE)
         window.swap_buffers()
         window.poll_events()
 
@@ -70,7 +80,6 @@ def main():
         if window.delta_time < 1. / 60:
             time.sleep((1. / 60 - window.delta_time) / 2)
             window.incremental_update_time()
-
 
 # start of the program
 if __name__ == "__main__":

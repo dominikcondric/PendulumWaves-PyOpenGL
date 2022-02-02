@@ -18,7 +18,7 @@ class PendulumSystem:
         # T = 2 * pi * sqrt(L / g)
         number_of_oscillations = 51.
         for i in range(10):
-            frequency = number_of_oscillations / 60.
+            frequency = number_of_oscillations / 80.
             pendulum_string_length = (1. / (4 * glm.pi()**2 * frequency**2)) * 9.81
             self.pendulums.append(Pendulum(glm.vec3(pendulum_position_x, 0., 0.), pendulum_string_length))
             self.pendulums[i].sphere.color = glm.vec4(1., 0.25, 0., 1.)
